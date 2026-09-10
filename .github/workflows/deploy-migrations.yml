@@ -4,18 +4,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'supabase/migrations/**' # Only trigger when SQL migration files change
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      # Replace 'your-project-ref-id' with your actual Supabase Project Reference ID
-      PRODUCTION_PROJECT_ID: 'hhgzwxmxkmirubqrhtnz' 
 
     steps:
       - name: Checkout code
@@ -27,4 +19,7 @@ jobs:
           version: latest
 
       - name: Deploy Database Migrations
-        run: supabase db push --project-ref $PRODUCTION_PROJECT_ID
+        run: supabase db push --project-ref ${{ secrets.SUPABASE_PROJECT_ID }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
