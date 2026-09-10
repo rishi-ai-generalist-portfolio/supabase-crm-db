@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile.dev
+    container_name: supabase-crm-db
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+      # Add your external Supabase credentials here:
+      - NEXT_PUBLIC_SUPABASE_URL=https://vvzdqghdnhctcazjnnow.supabase.co
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_DniipNj59ZVpTR2meNIeBw_Qn5gOLU6
+      # Add any additional environment variables below:
+      # - DATABASE_URL=postgresql://...
+    volumes:
+      # Mount workspace directory for Hot Module Replacement (HMR)
+      - .:/app
+      # Prevent local host node_modules from overriding container node_modules
+      - /app/node_modules
+      - /app/.next
