@@ -12,8 +12,7 @@ services:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true
       # Add your external Supabase credentials here:
-      - NEXT_PUBLIC_SUPABASE_URL=https://vvzdqghdnhctcazjnnow.supabase.co
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_DniipNj59ZVpTR2meNIeBw_Qn5gOLU6
+      
       # Add any additional environment variables below:
       # - DATABASE_URL=postgresql://...
       #Testing
