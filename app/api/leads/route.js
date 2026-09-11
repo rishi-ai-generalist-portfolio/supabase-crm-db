@@ -4,6 +4,20 @@
 // Parent_Type: "Lead", Parent_ID: the new Lead's ID).
 import { NextResponse } from 'next/server';
 import { supabase } from '../../../lib/supabaseClient';
+import { sendMail } from '../../../lib/mailer';
+
+export async function GET() {
+  const { data, error } = await supabase
+    .from('lead')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Failed to load leads:', error);
+    return NextResponse.json({ error: 'Could not load leads.' }, { status: 500 });
+  }
+  return NextResponse.json({ leads: data });
+}
 
 export async function POST(request) {
   try {
@@ -25,6 +39,24 @@ export async function POST(request) {
       console.error('Lead insert failed:', leadError);
       return NextResponse.json({ error: 'Could not save lead.' }, { status: 500 });
     }
+    // --- Task 6: notify the Sales Rep of the new Lead. ---
+    if (process.env.SalesRepEmail) {
+      await sendMail({
+        to: process.env.SalesRepEmail,
+        subject: `New Lead: ${lead.name}${lead.company ? ` (${lead.company})` : ''}`,
+        html: `
+          <p>A new Lead was captured from the website contact form.</p>
+          <ul>
+            <li><strong>Name:</strong> ${lead.name}</li>
+            <li><strong>Company:</strong> ${lead.company || '—'}</li>
+            <li><strong>Email:</strong> ${lead.email}</li>
+            <li><strong>Status:</strong> ${lead.status}</li>
+            <li><strong>Lead ID:</strong> ${lead.lead_id}</li>
+          </ul>
+        `,
+      });
+    }
+    // --- End Task 6 ---
 
     // 2. Insert the follow-up Task, linked to the new Lead
     const dueDate = new Date();
