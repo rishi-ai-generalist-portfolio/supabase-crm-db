@@ -4,7 +4,8 @@ import { NextResponse } from 'next/server';
 import { supabase } from '../../../../lib/supabaseClient';
 
 export async function GET(request, { params }) {
-  const { id } = params;
+  const { id } = await params;
+
   const { data, error } = await supabase
     .from('lead')
     .select('*')
@@ -18,7 +19,7 @@ export async function GET(request, { params }) {
 }
 
 export async function PATCH(request, { params }) {
-  const { id } = params;
+  const { id } = await params;
   const body = await request.json();
   const { status } = body;
 
