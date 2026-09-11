@@ -34,11 +34,13 @@ export default function LeadDetailPage() {
     setSaving(true);
     setError('');
     try {
+      console.log("Step 1");
       const res = await fetch(`/api/leads/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
+      console.log("Step 2");
       if (!res.ok) throw new Error('Could not update lead status.');
 
       if (status === 'Qualified') {

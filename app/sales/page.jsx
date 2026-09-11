@@ -13,6 +13,7 @@ async function getLeads() {
     .from('lead')
     .select('*')
     .order('created_at', { ascending: false });
+  
   if (error) {
     console.error('Failed to load leads:', error);
     return [];
